@@ -3,28 +3,30 @@
     <head>
         <meta charset="utf-8">
         <title>{{ page.title }}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-        <link href="/assets/css/syntax.css" rel="stylesheet">
-        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="/assets/css/syntax.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
     </head>
     <body>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/wasm">WebAssembly</a></li>
-            </ul>
+        <nav class="w3-bar w3-black">
+            <a href="/" class="w3-bar-item w3-button"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a>
+            <a href="/blog" class="w3-bar-item w3-button"><span>Blog</span></a>
+            <a href="/wasm" class="w3-bar-item w3-button"><span>WebAssembly</span></a>
         </nav>
-        <div class="container">
-        
-        {{ content }}
-        
+
+        <div class="w3-card-2 w3-margin w3-padding-small">
+            {{ content }}
         </div>
-        <footer>
-            <ul>
-                <li><a href="mailto:arkada38@gmail.com">email</a></li>
-                <li><a href="https://github.com/arkada38">github.com/arkada38</a></li>
-            </ul>
+        
+        <footer class="w3-bar w3-teal">
+            <a href="mailto:arkada38@gmail.com" class="w3-bar-item w3-button"><span class="icon is-small"><i class="fa fa-envelope-o" aria-hidden="true"></i></span></a>
+            <a href="https://github.com/arkada38" class="w3-bar-item w3-button"><span class="icon is-small"><i class="fa fa-github" aria-hidden="true"></i></span></a>
         </footer>
     </body>
 </html>

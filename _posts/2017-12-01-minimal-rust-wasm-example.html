@@ -1,62 +1,42 @@
 ---
 layout: post
-title: "Rust & WebAssembly"
+title: "Rust & WebAssembly minimal example"
 date: 2017-12-01
 categories: [blog, wasm]
 ---
 
 <h2>Files tree</h2>
 
+<div class="w3-card-2">
 {% highlight bash %}
 ├── src
 │   └── main.rs
 ├── build
 │   └── main.wasm
 ├── index.html
-├── script.js
-├── run.but
-└── README.md
+└── script.js
 {% endhighlight %}
+</div>
 
 <h2>Preparatory work</h2>
 
+<div class="w3-card-2">
 {% highlight bash %}
 rustup update
 rustup target add wasm32-unknown-unknown --toolchain nightly
 cargo install --git https://github.com/alexcrichton/wasm-gc
 {% endhighlight %}
+</div>
 
-<h2>Rust</h2>
+<h2>Files creation</h2>
 
-Create <i>main.rs</i> file with some functions in <i>src</i> folder
+<div class="w3-bar w3-black">
+    <button class="w3-bar-item w3-button tablink w3-red" onclick="openCity(event,'index')">index.html</button>
+    <button class="w3-bar-item w3-button tablink" onclick="openCity(event,'script')">script.js</button>
+    <button class="w3-bar-item w3-button tablink" onclick="openCity(event,'main')">src/main.rs</button>
+</div>
 
-{% highlight rust %}
-#[no_mangle]
-pub fn add(a: i32, b: i32) -> i32 {
-    a + b
-}
-{% endhighlight %}
-
-<h2>Wasm</h2>
-
-Generate wasm module from rs file:
-
-{% highlight bash %}
-rustc +nightly --target wasm32-unknown-unknown -O --crate-type=cdylib src\main.rs -o build\main.big.wasm
-{% endhighlight %}
-
-Reduce the size by removing unused stuff from the module:
-
-{% highlight bash %}
-wasm-gc build\main.big.wasm build\main.wasm
-{% endhighlight %}
-
-<h2>Web</h2>
-
-<h3>index.html</h3>
-
-Create simple html page.
-
+<div id="index" class="w3-container w3-border city">
 {% highlight html %}
 <!DOCTYPE html>
 <html lang="en">
@@ -72,12 +52,11 @@ Create simple html page.
 </body>
 </html>
 {% endhighlight %}
+</div>
 
-<h3>script.js</h3>
-
-The JavaScript code loads the WebAssembly module and has access to the exported function.
-
+<div id="script" class="w3-container w3-border city" style="display:none">
 {% highlight javascript %}
+//The JavaScript code loads the WebAssembly module and has access to the exported function.
 window.onload = function() {
     let a = document.querySelector('#a'),
         b = document.querySelector('#b'),
@@ -100,25 +79,103 @@ window.onload = function() {
     });
 };
 {% endhighlight %}
+</div>
+
+<div id="main" class="w3-container w3-border city" style="display:none">
+{% highlight rust %}
+#[no_mangle]
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+{% endhighlight %}
+</div>
+    
+<script>
+function openCity(evt, cityName) {
+    var i, x, tablinks;
+    x = document.getElementsByClassName("city");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
+}
+</script>
+
+<h2>Wasm generation</h2>
+
+Generate <i>wasm</i> module in <i>build</i> folder from <i>rs</i> file:
+
+<div class="w3-card-2">
+{% highlight bash %}
+rustc +nightly --target wasm32-unknown-unknown -O --crate-type=cdylib src\main.rs -o build\main.big.wasm
+{% endhighlight %}
+</div>
+
+Reduce the size by removing unused stuff from the module:
+
+<div class="w3-card-2">
+{% highlight bash %}
+wasm-gc build\main.big.wasm build\main.wasm
+{% endhighlight %}
+</div>
+
+<h2>Sample</h2>
+
+<input type="number" id="a" value="0">+
+<input type="number" id="b" value="0">=
+<output id="c">0</output>
+<script>
+let a = document.querySelector('#a'),
+    b = document.querySelector('#b'),
+    c = document.querySelector('#c');
+
+let add;
+
+let calc = function() {
+    c.value = add(a.value, b.value);
+};
+
+a.oninput = calc;
+b.oninput = calc;
+
+fetch('{{ site.url }}/assets/wasm/add.wasm')
+.then(response => response.arrayBuffer())
+.then(bytes => WebAssembly.instantiate(bytes, {}))
+.then(results => {
+    add = results.instance.exports.add;
+});
+</script>
+
+<h2>Other</h2>
 
 <h3>Http server</h3>
 
 For local testing http server needed. A good "ready-to-use tool" option could be browser-sync:
 
+<div class="w3-card-2">
 {% highlight bash %}
 npm install -g browser-sync
 {% endhighlight %}
+</div>
 
 To use it:
 
+<div class="w3-card-2">
 {% highlight bash %}
 browser-sync start --server --port 3001 --files="./*"
 {% endhighlight %}
+</div>
 
-<h2>Batch helper script</h2>
+<h3>Batch helper script</h3>
 
 Batch script for generation <i>.wasm</i> in <i>build</i> folder for every <i>.rs</i> in <i>src</i> folder
 
+<div class="w3-card-2">
 {% highlight batch %}
 @echo off
 
@@ -132,3 +189,4 @@ if "%~x1"==".rs" (
     del build\%~n1.big.wasm
 )
 {% endhighlight %}
+</div>

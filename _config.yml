@@ -4,3 +4,6 @@ highlighter: rouge
 kramdown:
   input: GFM
   hard_wrap: false
+webrick:
+  headers:
+    Access-Control-Allow-Origin: "*"
