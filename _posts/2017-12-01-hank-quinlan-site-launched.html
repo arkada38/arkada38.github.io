@@ -1,8 +1,12 @@
-# Rust & WebAssembly
+---
+layout: post
+title: "Rust & WebAssembly"
+date: 2017-12-01
+---
 
-## Files tree
+<h2>Files tree</h2>
 
-```tree
+{% highlight bash %}
 ├── src
 │   └── main.rs
 ├── build
@@ -11,68 +15,68 @@
 ├── script.js
 ├── run.but
 └── README.md
-```
+{% endhighlight %}
 
-## Preparatory work
+<h2>Preparatory work</h2>
 
-```bash
+{% highlight bash %}
 rustup update
 rustup target add wasm32-unknown-unknown --toolchain nightly
 cargo install --git https://github.com/alexcrichton/wasm-gc
-```
+{% endhighlight %}
 
-## Rust
+<h2>Rust</h2>
 
 Create `main.rs` file with some functions in `src` folder
 
-```rust
+{% highlight rust %}
 #[no_mangle]
 pub fn add(a: i32, b: i32) -> i32 {
     a + b
 }
-```
+{% endhighlight %}
 
-## Wasm
+<h2>Wasm</h2>
 
 Generate wasm module from rs file:
 
-```bash
+{% highlight bash %}
 rustc +nightly --target wasm32-unknown-unknown -O --crate-type=cdylib src\main.rs -o build\main.big.wasm
-```
+{% endhighlight %}
 
 Reduce the size by removing unused stuff from the module:
 
-```bash
+{% highlight bash %}
 wasm-gc build\main.big.wasm build\main.wasm
-```
+{% endhighlight %}
 
-## Web
+<h2>Web</h2>
 
-### index.html
+<h3>index.html</h3>
 
 Create simple html page.
 
-```html
+{% highlight html %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="utf-8">
-      <title>WebAssembly</title>
-      <script src="script.js"></script>
-  </head>
-  <body>
+<head>
+    <meta charset="utf-8">
+    <title>WebAssembly</title>
+    <script src="script.js"></script>
+</head>
+<body>
     <input type="number" id="a" value="0">+
     <input type="number" id="b" value="0">=
     <output id="c">0</output>
-  </body>
+</body>
 </html>
-```
+{% endhighlight %}
 
-### script.js
+<h3>script.js</h3>
 
 The JavaScript code loads the WebAssembly module and has access to the exported function.
 
-```javascript
+{% highlight javascript %}
 window.onload = function() {
     let a = document.querySelector('#a'),
         b = document.querySelector('#b'),
@@ -94,27 +98,27 @@ window.onload = function() {
         add = results.instance.exports.add;
     });
 };
-```
+{% endhighlight %}
 
-### Http server
+<h3>Http server</h3>
 
 For local testing http server needed. A good "ready-to-use tool" option could be browser-sync:
 
-```bash
+{% highlight bash %}
 npm install -g browser-sync
-```
+{% endhighlight %}
 
 To use it:
 
-```bash
+{% highlight bash %}
 browser-sync start --server --port 3001 --files="./*"
-```
+{% endhighlight %}
 
-## Batch helper script
+<h2>Batch helper script</h2>
 
 Batch script for generation `.wasm` in `build` folder for every `.rs` in `src` folder
 
-```batch
+{% highlight batch %}
 @echo off
 
 for /r %%a in (src\*.rs) do call :process "%%a"
@@ -126,4 +130,4 @@ if "%~x1"==".rs" (
     wasm-gc build\%~n1.big.wasm build\%~n1.wasm
     del build\%~n1.big.wasm
 )
-```
+{% endhighlight %}
