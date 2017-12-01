@@ -2,6 +2,7 @@
 layout: post
 title: "Rust & WebAssembly"
 date: 2017-12-01
+categories: [blog, wasm]
 ---
 
 <h2>Files tree</h2>
@@ -27,7 +28,7 @@ cargo install --git https://github.com/alexcrichton/wasm-gc
 
 <h2>Rust</h2>
 
-Create `main.rs` file with some functions in `src` folder
+Create <i>main.rs</i> file with some functions in <i>src</i> folder
 
 {% highlight rust %}
 #[no_mangle]
@@ -116,7 +117,7 @@ browser-sync start --server --port 3001 --files="./*"
 
 <h2>Batch helper script</h2>
 
-Batch script for generation `.wasm` in `build` folder for every `.rs` in `src` folder
+Batch script for generation <i>.wasm</i> in <i>build</i> folder for every <i>.rs</i> in <i>src</i> folder
 
 {% highlight batch %}
 @echo off
