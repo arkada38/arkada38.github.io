@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Draft post"
+categories: [draft, rust]
+---
+
 # Draft post
 
 ```bash
