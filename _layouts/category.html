@@ -3,9 +3,8 @@ layout: default
 ---
 
 <h1>{{ page.title }}</h1>
-<ul class="w3-ul w3-border">
-
+<div class="list-group">
 	{% for post in site.categories[page.category] %}
-		<li><span>{{ post.date | date_to_string }}</span> >> <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+		<a href="{{ post.url }}" title="{{ post.title }}" class="list-group-item list-group-item-action">{{ post.date | date_to_string }} - {{ post.title }}</a>
 	{% endfor %}
-</ul>
+</div>
