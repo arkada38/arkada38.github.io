@@ -1,0 +1,167 @@
+---
+layout: post
+title: "Factorial"
+date: 2017-12-02
+categories: [rust, wasm]
+---
+
+<div class="alert alert-info alert-dismissable fade show">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    The material is borrowed from <a href="https://www.hellorust.com/demos/factorial/index.html">Hello, Rust!</a>
+</div>
+
+<div class="card">
+    <div class="card-header">Files creation</div>
+    <div class="card-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#index">index.html</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#script">script.js</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#main">src/main.rs</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="index" class="container tab-pane active"><br>
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>WebAssembly</title>
+      <script src="bundle.js"></script>
+      <script src="script.js"></script>
+  </head>
+  <body>
+    factorial(<input type="number" id="n" value="10" min="0" max="65">)=
+    <output id="f">3628800</output>
+  </body>
+</html>
+{% endhighlight %}
+            </div>
+            <div id="script" class="container tab-pane fade"><br>
+{% highlight javascript %}
+window.onload = function() {
+    window.Module = {};
+
+    let n = document.querySelector('#n'),
+        f = document.querySelector('#f');
+
+    let calc = function() {
+        f.value = Module.fact_str(n.value);
+    };
+    
+    n.oninput = calc;
+
+    fetchAndInstantiate("build/main.wasm", {})
+    .then(mod => {
+        Module.fact  = mod.exports.fact;
+        Module.alloc = mod.exports.alloc;
+        Module.dealloc_str = mod.exports.dealloc_str;
+        Module.memory = mod.exports.memory;
+        Module.fact_str = function(n) {
+          let outptr = mod.exports.fact_str(n);
+          let result = copyCStr(Module, outptr);
+          return result;
+        };
+    });
+};
+{% endhighlight %}
+            </div>
+            <div id="main" class="container tab-pane fade"><br>
+{% highlight rust %}
+use std::mem;
+use std::ffi::CString;
+use std::os::raw::{c_char, c_void};
+
+#[no_mangle]
+pub extern "C" fn alloc(size: usize) -> *mut c_void {
+    let mut buf = Vec::with_capacity(size);
+    let ptr = buf.as_mut_ptr();
+    mem::forget(buf);
+    return ptr as *mut c_void;
+}
+
+#[no_mangle]
+pub extern "C" fn dealloc_str(ptr: *mut c_char) {
+    unsafe {
+        let _ = CString::from_raw(ptr);
+    }
+}
+
+#[no_mangle]
+pub fn fact(n: u32) -> u64 {
+    let mut n = n as u64;
+    let mut result = 1;
+    while n > 0 {
+        result = result * n;
+        n = n - 1;
+    }
+    result
+}
+
+#[no_mangle]
+pub fn fact_str(n: u32) -> *mut c_char {
+    let res = fact(n);
+    let s = format!("{}", res);
+    let s = CString::new(s).unwrap();
+    s.into_raw()
+}
+{% endhighlight %}
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="alert alert-primary">
+    The helper function copyCStr is defined in <a href="{{ site.url }}/assets/js/bundle.js">bundle.js</a>.
+</div>
+
+<div class="card">
+    <div class="card-header">Result</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <label for="n">n:</label>
+                <input class="form-control" type="number" id="n" value="10" min="0" max="65">
+            </div>
+            <div class="col">
+                <label for="f">factorial(n):</label>
+                <input class="form-control" type="number" id="f" value="3628800" disabled>
+            </div>
+        </div>
+        <script src="{{ site.url }}/assets/js/bundle.js"></script>
+        <script>
+        window.Module = {};
+        
+        let n = document.querySelector('#n'),
+            f = document.querySelector('#f');
+    
+        let calc = function() {
+            f.value = Module.fact_str(n.value);
+        };
+        
+        n.oninput = calc;
+    
+        fetchAndInstantiate("{{ site.url }}/assets/wasm/factorial.wasm", {})
+        .then(mod => {
+            Module.fact  = mod.exports.fact;
+            Module.alloc = mod.exports.alloc;
+            Module.dealloc_str = mod.exports.dealloc_str;
+            Module.memory = mod.exports.memory;
+            Module.fact_str = function(n) {
+                let outptr = mod.exports.fact_str(n);
+                let result = copyCStr(Module, outptr);
+                return result;
+            };
+        });
+        </script>
+    </div> 
+</div>
