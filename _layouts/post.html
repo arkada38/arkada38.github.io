@@ -3,10 +3,16 @@ layout: default
 comments: true
 ---
 <h1>{{ page.title }}</h1>
+
+{% if site.disqus.shortname and page.comments != false %}
+<p class="meta">{{ page.date | date_to_string }} <a href="{{ page.url | absolute_url }}#disqus_thread">0 Comments</a></p>
+{% else %}
 <p class="meta">{{ page.date | date_to_string }}</p>
+{% endif %}
 
 <div class="post">
   {{ content }}
+  <script id="dsq-count-scr" src="//arkada38.disqus.com/count.js" async></script>
 </div>
 
 {% include disqus_comments.html %}
