@@ -1,4 +1,5 @@
 name: Arkadiy Kuznetsov
+url: "https://arkada38.github.io/"
 markdown: kramdown
 highlighter: rouge
 kramdown:
@@ -11,3 +12,5 @@ webrick:
 google_analytics: UA-110549357-1
 disqus:
     shortname: arkada38
+plugins:
+  - jekyll-sitemap
