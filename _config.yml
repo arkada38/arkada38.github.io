@@ -4,6 +4,7 @@ highlighter: rouge
 kramdown:
   input: GFM
   hard_wrap: false
+permalink: /:year/:month/:day/:title/
 webrick:
   headers:
     Access-Control-Allow-Origin: "*"
