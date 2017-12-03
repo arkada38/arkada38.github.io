@@ -7,3 +7,4 @@ kramdown:
 webrick:
   headers:
     Access-Control-Allow-Origin: "*"
+google_analytics: UA-110549357-1
