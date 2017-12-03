@@ -1,0 +1,180 @@
+---
+layout: post
+title: "Rust & WebAssembly minimal cargo project"
+date: 2017-12-03
+categories: [rust, wasm]
+---
+
+Lets create <mark>wasm</mark> module from <mark>cargo</mark> project.
+
+<div class="card mt-4">
+    <div class="card-header">Cargo project</div>
+    <div class="card-body">
+        <h4 class="card-title">Creation</h4>
+{% highlight bash %}
+cargo new simple_cargo_project --bin
+cd simple_cargo_project
+{% endhighlight %}
+        <h4 class="card-title">Files creation</h4>
+        Create new files in <mark>src</mark> folder.
+        <ul class="list-group">
+            <li class="list-group-item">lib.rs</li>
+            <li class="list-group-item">mod_1.rs</li>
+            <li class="list-group-item">mod_2.rs</li>
+        </ul>
+        <br>
+        <h4 class="card-title">Code insertion</h4>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#main">src/main.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#lib">src/lib.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#mod_1">src/mod_1.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#mod_2">src/mod_2.rs</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="main" class="container tab-pane active"><br>
+{% highlight rust %}
+extern crate simple_cargo_project;
+
+fn main() { }
+{% endhighlight %}
+            </div>
+            <div id="lib" class="container tab-pane fade"><br>
+{% highlight rust %}
+pub mod mod_1;
+pub mod mod_2;
+{% endhighlight %}
+            </div>
+            <div id="mod_1" class="container tab-pane fade"><br>
+{% highlight rust %}
+#[no_mangle]
+pub fn add_one_from_mod_1(x: i32) -> i32 {
+    x + 1
+}
+
+#[no_mangle]
+pub fn add_two_from_mod_1(x: i32) -> i32 {
+    x + 2
+}
+{% endhighlight %}
+            </div>
+            <div id="mod_2" class="container tab-pane fade"><br>
+{% highlight rust %}
+#[no_mangle]
+pub fn add_three_from_mod_2(x: i32) -> i32 {
+    x + 3
+}
+
+#[no_mangle]
+pub fn add_four_from_mod_2(x: i32) -> i32 {
+    x + 4
+}
+{% endhighlight %}
+            </div>
+        </div>
+        <h4 class="card-title">Files tree of simple_cargo_project folder</h4>
+{% highlight bash %}
+.
+├── Cargo.toml
+└── src
+    ├── lib.rs
+    ├── main.rs
+    ├── mod_1.rs
+    └── mod_2.rs
+{% endhighlight %}
+    </div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Wasm module generation</div>
+    <div class="card-body">
+{% highlight bash %}
+rustup run nightly cargo build --release --target wasm32-unknown-unknown
+wasm-gc target\wasm32-unknown-unknown\release\simple_cargo_project.wasm simple_cargo_project.wasm
+{% endhighlight %}
+        Now we have <mark>simple_cargo_project.wasm</mark> module in root folder. You can download <mark>wasm</mark> module <a href="{{ site.url }}/assets/wasm/simple_cargo_project.wasm">here</a>.
+    </div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Wasm module connection</div>
+    <div class="card-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#index">index.html</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#script">script.js</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#output">output</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="index" class="container tab-pane active"><br>
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebAssembly</title>
+    <script src="script.js"></script>
+</head>
+<body>
+
+</body>
+</html>
+{% endhighlight %}
+            </div>
+            <div id="script" class="container tab-pane fade"><br>
+{% highlight javascript %}
+window.onload = function() {
+    window.Module = {};
+
+    fetch('simple_cargo_project.wasm')
+    .then(response => response.arrayBuffer())
+    .then(bytes => WebAssembly.instantiate(bytes, {}))
+    .then(results => {
+        Module.exports = results.instance.exports;
+        
+        Object.getOwnPropertyNames(Module.exports)
+        .forEach((property) => {
+            if (typeof Module.exports[property] === 'function')
+            console.log(property);
+        });
+    });
+};
+{% endhighlight %}
+            </div>
+            <div id="output" class="container tab-pane fade"><br>
+                <ul class="list-group">
+                    <li class="list-group-item">add_one_from_mod_1</li>
+                    <li class="list-group-item">add_two_from_mod_1</li>
+                    <li class="list-group-item">add_three_from_mod_2</li>
+                    <li class="list-group-item">add_four_from_mod_2</li>
+                    <li class="list-group-item">rust_eh_personality</li>
+                </ul>
+            </div>
+        </div>
+        All functions are available in <mark>Module.export</mark> object.
+{% highlight javascript %}
+let res = Module.exports.add_three_from_mod_2(6); // res = 9
+{% endhighlight %}
+    </div>
+</div>
+<br>
