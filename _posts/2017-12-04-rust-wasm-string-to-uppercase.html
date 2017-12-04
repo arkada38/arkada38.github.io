@@ -1,0 +1,163 @@
+---
+layout: post
+title: "String to uppercase"
+date: 2017-12-04
+categories: [rust, wasm]
+---
+
+<p>Lets create <mark>wasm</mark> module with <mark>to_uppercase</mark> function.</p>
+
+<div class="card">
+    <div class="card-header">Files creation</div>
+    <div class="card-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#index">index.html</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#script">script.js</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#rs">src/main.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#wasm">build/main.wasm</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="index" class="container tab-pane active"><br>
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <title>WebAssembly</title>
+      <script src="bundle.js"></script>
+      <script src="script.js"></script>
+  </head>
+  <body>
+    <input id="a">
+    <output id="b"></output>
+  </body>
+</html>
+{% endhighlight %}
+            </div>
+            <div id="script" class="container tab-pane fade"><br>
+{% highlight javascript %}
+window.onload = function() {
+    window.Module = {};
+
+    let a = document.querySelector('#a'),
+        b = document.querySelector('#b'),
+        to_uppercase;
+
+    let calc = function() {
+        b.value = to_uppercase(a.value);
+    };
+    
+    a.oninput = calc;
+
+    fetchAndInstantiate('build/main.wasm')
+    .then(mod => {
+        Module = mod.exports;
+        to_uppercase = s => {
+          let outptr = Module.to_uppercase(newString(Module, s));
+          return copyCStr(Module, outptr);
+        };
+    });;
+};
+{% endhighlight %}
+            </div>
+            <div id="rs" class="container tab-pane fade"><br>
+{% highlight rust %}
+use std::mem;
+use std::ffi::CString;
+use std::os::raw::{c_char, c_void};
+
+fn main() {}
+
+#[no_mangle]
+pub extern "C" fn alloc(size: usize) -> *mut c_void {
+    let mut buf = Vec::with_capacity(size);
+    let ptr = buf.as_mut_ptr();
+    mem::forget(buf);
+    return ptr as *mut c_void;
+}
+
+#[no_mangle]
+pub extern "C" fn dealloc_str(ptr: *mut c_char) {
+    unsafe {
+        let _ = CString::from_raw(ptr);
+    }
+}
+
+#[no_mangle]
+pub fn to_uppercase(ptr: *mut c_char) -> *mut c_char {
+    let mut s: String;
+
+    unsafe {
+        s = CString::from_raw(ptr).into_string().unwrap();
+    }
+    
+    s = s.to_uppercase();
+
+    let c_string = CString::new(s).unwrap();
+    c_string.into_raw()
+}
+{% endhighlight %}
+            </div>
+            <div id="wasm" class="container tab-pane fade"><br>
+                Save <a href="{{ site.url }}/assets/wasm/to_uppercase.wasm">this file</a> as <mark>main.wasm</mark> in <mark>build</mark> folder.<br>
+                Or generate this file by<br>
+                <code>rustc +nightly --target wasm32-unknown-unknown -O --crate-type=cdylib src\main.rs -o build\main.big.wasm</code>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="alert alert-primary">
+    The helper functions are defined in <a href="{{ site.url }}/assets/js/bundle.js">bundle.js</a>.
+</div>
+
+<div class="card">
+    <div class="card-header">Result</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <label for="a">Your awesome text:</label>
+                <input class="form-control" id="a">
+            </div>
+            <div class="col">
+                <label for="b">In uppercase:</label>
+                <input class="form-control" id="b" disabled>
+            </div>
+        </div>
+        <script src="{{ site.url }}/assets/js/bundle.js"></script>
+        <script>
+        window.Module = {};
+        
+        let a = document.querySelector('#a'),
+            b = document.querySelector('#b'),
+            to_uppercase;
+    
+        let calc = function() {
+            b.value = to_uppercase(a.value);
+        };
+        
+        a.oninput = calc;
+    
+        fetchAndInstantiate("{{ site.url }}/assets/wasm/to_uppercase.wasm")
+        .then(mod => {
+            Module = mod.exports;
+            to_uppercase = s => {
+                let outptr = Module.to_uppercase(newString(Module, s));
+                return copyCStr(Module, outptr);
+            };
+        });
+        </script>
+    </div> 
+</div>
