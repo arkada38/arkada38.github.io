@@ -54,24 +54,22 @@ window.onload = function() {
     window.Module = {};
 
     let n = document.querySelector('#n'),
-        f = document.querySelector('#f');
+        f = document.querySelector('#f'),
+        fact_str;
 
     let calc = function() {
-        f.value = Module.fact_str(n.value);
+        f.value = fact_str(n.value);
     };
     
     n.oninput = calc;
 
-    fetchAndInstantiate("build/main.wasm", {})
+    fetchAndInstantiate("build/main.wasm")
     .then(mod => {
-        Module.fact  = mod.exports.fact;
-        Module.alloc = mod.exports.alloc;
-        Module.dealloc_str = mod.exports.dealloc_str;
-        Module.memory = mod.exports.memory;
-        Module.fact_str = function(n) {
-          let outptr = mod.exports.fact_str(n);
-          let result = copyCStr(Module, outptr);
-          return result;
+        Module = mod.exports;
+        fact_str = function(n) {
+            let outptr = Module.fact_str(n);
+            let result = copyCStr(Module, outptr);
+            return result;
         };
     });
 };
@@ -152,22 +150,20 @@ pub fn fact_str(n: u32) -> *mut c_char {
         window.Module = {};
         
         let n = document.querySelector('#n'),
-            f = document.querySelector('#f');
+            f = document.querySelector('#f'),
+            fact_str;
     
         let calc = function() {
-            f.value = Module.fact_str(n.value);
+            f.value = fact_str(n.value);
         };
         
         n.oninput = calc;
     
-        fetchAndInstantiate("{{ site.url }}/assets/wasm/factorial.wasm", {})
+        fetchAndInstantiate("{{ site.url }}/assets/wasm/factorial.wasm")
         .then(mod => {
-            Module.fact  = mod.exports.fact;
-            Module.alloc = mod.exports.alloc;
-            Module.dealloc_str = mod.exports.dealloc_str;
-            Module.memory = mod.exports.memory;
-            Module.fact_str = function(n) {
-                let outptr = mod.exports.fact_str(n);
+            Module = mod.exports;
+            fact_str = function(n) {
+                let outptr = Module.fact_str(n);
                 let result = copyCStr(Module, outptr);
                 return result;
             };

@@ -1,11 +1,8 @@
-function fetchAndInstantiate(url, importObject) {
-  return fetch(url).then(response =>
-    response.arrayBuffer()
-  ).then(bytes =>
-    WebAssembly.instantiate(bytes, importObject)
-  ).then(results =>
-    results.instance
-  );
+function fetchAndInstantiate(url, importObject = {}) {
+  return fetch(url)
+    .then(response => response.arrayBuffer())
+    .then(bytes => WebAssembly.instantiate(bytes, importObject))
+    .then(results => results.instance);
 }
 
 function copyCStr(module, ptr) {
@@ -35,7 +32,7 @@ function getStr(module, ptr, len) {
     }
   }
 
-  const buffer_as_u8 = new Uint8Array(getData(ptr/8, len/8));
+  const buffer_as_u8 = new Uint8Array(getData(ptr / 8, len / 8));
   const utf8Decoder = new TextDecoder("UTF-8");
   const buffer_as_utf8 = utf8Decoder.decode(buffer_as_u8);
   return buffer_as_utf8;
@@ -45,14 +42,14 @@ function newString(module, str) {
   const utf8Encoder = new TextEncoder("UTF-8");
   let string_buffer = utf8Encoder.encode(str)
   let len = string_buffer.length
-  let ptr = module.alloc(len+1)
+  let ptr = module.alloc(len + 1)
 
   let memory = new Uint8Array(module.memory.buffer);
   for (i = 0; i < len; i++) {
-    memory[ptr+i] = string_buffer[i]
+    memory[ptr + i] = string_buffer[i]
   }
 
-  memory[ptr+len] = 0;
+  memory[ptr + len] = 0;
 
   return ptr
 }
