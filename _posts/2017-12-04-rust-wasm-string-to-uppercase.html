@@ -6,6 +6,7 @@ categories: [rust, wasm]
 ---
 
 <p>Lets create <mark>wasm</mark> module with <mark>to_uppercase</mark> function.</p>
+<p>Our goal is to send the <mark>string</mark> from <mark>JavaScript</mark> to <mark>Rust</mark>, process the <mark>string</mark> in <mark>Rust</mark> and send back to <mark>JavaScript</mark>.</p>
 
 <div class="card">
     <div class="card-header">Files creation</div>
@@ -117,7 +118,9 @@ pub fn to_uppercase(ptr: *mut c_char) -> *mut c_char {
         </div>
     </div>
 </div>
-<br>
+
+<p>We need to encode the string, allocate some space in the exported memory buffer and copy over the string for sending the string from JavaScript to Rust.
+On return of the Rust function, we decode the new string from the memory buffer.</p>
 
 <div class="alert alert-primary">
     The helper functions are defined in <a href="{{ site.url }}/assets/js/bundle.js">bundle.js</a>.
