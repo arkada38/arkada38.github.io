@@ -51,7 +51,7 @@ categories: [rust, wasm]
             <div id="script" class="container tab-pane fade"><br>
 {% highlight javascript %}
 window.onload = function() {
-    window.Module = {};
+    window.exports = {};
 
     let n = document.querySelector('#n'),
         f = document.querySelector('#f'),
@@ -65,10 +65,10 @@ window.onload = function() {
 
     fetchAndInstantiate("build/main.wasm")
     .then(mod => {
-        Module = mod.exports;
+        exports = mod.exports;
         fact_str = function(n) {
-            let outptr = Module.fact_str(n);
-            let result = copyCStr(Module, outptr);
+            let outptr = exports.fact_str(n);
+            let result = copyCStr(exports, outptr);
             return result;
         };
     });
@@ -147,7 +147,7 @@ pub fn fact_str(n: u32) -> *mut c_char {
         </div>
         <script src="{{ site.url }}/assets/js/bundle.js"></script>
         <script>
-        window.Module = {};
+        window.exports = {};
         
         let n = document.querySelector('#n'),
             f = document.querySelector('#f'),
@@ -161,10 +161,10 @@ pub fn fact_str(n: u32) -> *mut c_char {
     
         fetchAndInstantiate("{{ site.url }}/assets/wasm/factorial.wasm")
         .then(mod => {
-            Module = mod.exports;
+            exports = mod.exports;
             fact_str = function(n) {
-                let outptr = Module.fact_str(n);
-                let result = copyCStr(Module, outptr);
+                let outptr = exports.fact_str(n);
+                let result = copyCStr(exports, outptr);
                 return result;
             };
         });

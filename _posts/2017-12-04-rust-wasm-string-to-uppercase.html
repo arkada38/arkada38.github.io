@@ -49,7 +49,7 @@ categories: [rust, wasm]
             <div id="script" class="container tab-pane fade"><br>
 {% highlight javascript %}
 window.onload = function() {
-    window.Module = {};
+    window.exports = {};
 
     let a = document.querySelector('#a'),
         b = document.querySelector('#b'),
@@ -63,10 +63,10 @@ window.onload = function() {
 
     fetchAndInstantiate('build/main.wasm')
     .then(mod => {
-        Module = mod.exports;
+        exports = mod.exports;
         to_uppercase = s => {
-          let outptr = Module.to_uppercase(newString(Module, s));
-          return copyCStr(Module, outptr);
+          let outptr = exports.to_uppercase(newString(exports, s));
+          return copyCStr(exports, outptr);
         };
     });;
 };
@@ -141,7 +141,7 @@ On return of the Rust function, we decode the new string from the memory buffer.
         </div>
         <script src="{{ site.url }}/assets/js/bundle.js"></script>
         <script>
-        window.Module = {};
+        window.exports = {};
         
         let a = document.querySelector('#a'),
             b = document.querySelector('#b'),
@@ -155,10 +155,10 @@ On return of the Rust function, we decode the new string from the memory buffer.
     
         fetchAndInstantiate("{{ site.url }}/assets/wasm/to_uppercase.wasm")
         .then(mod => {
-            Module = mod.exports;
+            exports = mod.exports;
             to_uppercase = s => {
-                let outptr = Module.to_uppercase(newString(Module, s));
-                return copyCStr(Module, outptr);
+                let outptr = exports.to_uppercase(newString(exports, s));
+                return copyCStr(exports, outptr);
             };
         });
         </script>
