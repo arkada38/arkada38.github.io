@@ -172,6 +172,24 @@ wasm-gc build\main.big.wasm build\main.wasm
 <br>
 
 <div class="card">
+    <div class="card-header">WebAssembly text format</div>
+    <div class="card-body">
+{% highlight wast %}
+(module
+(type $t0 (func (param i32 i32) (result i32)))
+(func $add (export "add") (type $t0) (param $p0 i32) (param $p1 i32) (result i32)
+  (i32.add
+    (get_local $p1)
+    (get_local $p0)))
+(table $T0 0 anyfunc)
+(memory $memory (export "memory") 17)
+(data (i32.const 4) "\10\00\10\00"))
+{% endhighlight %}
+    </div> 
+</div>
+<br>
+
+<div class="card">
     <div class="card-header">Other</div>
     <div class="card-body">
         <h4 class="card-title">Http server</h4>
