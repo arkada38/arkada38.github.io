@@ -83,6 +83,8 @@ use std::mem;
 use std::ffi::CString;
 use std::os::raw::{c_char, c_void};
 
+fn main() {}
+
 #[no_mangle]
 pub extern "C" fn alloc(size: usize) -> *mut c_void {
     let mut buf = Vec::with_capacity(size);
