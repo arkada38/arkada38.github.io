@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Draft post"
+date: 2017-12-01
 categories: [draft, rust]
 ---
 
