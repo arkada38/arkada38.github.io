@@ -52,23 +52,20 @@ window.onload = function() {
     window.exports = {};
 
     let a = document.querySelector('#a'),
-        b = document.querySelector('#b'),
-        to_uppercase;
-
-    let calc = function() {
-        b.value = to_uppercase(a.value);
-    };
-    
-    a.oninput = calc;
+        b = document.querySelector('#b');
 
     fetchAndInstantiate('build/main.wasm')
     .then(mod => {
         exports = mod.exports;
-        to_uppercase = s => {
+
+        let to_uppercase = s => {
           let outptr = exports.to_uppercase(newString(exports, s));
           return copyCStr(exports, outptr);
         };
-    });;
+
+        a.oninput = () =>
+            b.value = to_uppercase(a.value);
+    });
 };
 {% endhighlight %}
             </div>
@@ -77,8 +74,6 @@ window.onload = function() {
 use std::mem;
 use std::ffi::CString;
 use std::os::raw::{c_char, c_void};
-
-fn main() {}
 
 #[no_mangle]
 pub extern "C" fn alloc(size: usize) -> *mut c_void {
@@ -141,26 +136,25 @@ On return of the Rust function, we decode the new string from the memory buffer.
         </div>
         <script src="{{ site.url }}/assets/js/bundle.js"></script>
         <script>
-        window.exports = {};
-        
-        let a = document.querySelector('#a'),
-            b = document.querySelector('#b'),
-            to_uppercase;
-    
-        let calc = function() {
-            b.value = to_uppercase(a.value);
-        };
-        
-        a.oninput = calc;
-    
-        fetchAndInstantiate("{{ site.url }}/assets/wasm/to_uppercase.wasm")
-        .then(mod => {
-            exports = mod.exports;
-            to_uppercase = s => {
+        window.onload = function() {
+            window.exports = {};
+
+            let a = document.querySelector('#a'),
+                b = document.querySelector('#b');
+
+            fetchAndInstantiate('{{ site.url }}/assets/wasm/to_uppercase.wasm')
+            .then(mod => {
+                exports = mod.exports;
+                
+                let to_uppercase = s => {
                 let outptr = exports.to_uppercase(newString(exports, s));
                 return copyCStr(exports, outptr);
-            };
-        });
+                };
+
+                a.oninput = () =>
+                    b.value = to_uppercase(a.value);
+            });
+        };
         </script>
     </div> 
 </div>
