@@ -171,3 +171,46 @@ pub fn fact_str(n: u32) -> *mut c_char {
         </script>
     </div> 
 </div>
+<br>
+
+<div class="card">
+    <div class="card-header">WebAssembly text format with fn fact(n: u32) -> u64 only</div>
+    <div class="card-body">
+{% highlight wast %}
+(module
+(type $t0 (func (param i32) (result i64)))
+(func $fact (export "fact") (type $t0) (param $p0 i32) (result i64)
+  (local $l0 i64) (local $l1 i64)
+  (block $B0
+    (block $B1
+      (br_if $B1
+        (i32.eqz
+          (get_local $p0)))
+      (set_local $l0
+        (i64.extend_u/i32
+          (get_local $p0)))
+      (set_local $l1
+        (i64.const 1))
+      (loop $L2
+        (set_local $l1
+          (i64.mul
+            (get_local $l0)
+            (get_local $l1)))
+        (br_if $L2
+          (i32.eqz
+            (i64.eqz
+              (tee_local $l0
+                (i64.add
+                  (get_local $l0)
+                  (i64.const -1))))))
+        (br $B0))
+      (unreachable))
+    (set_local $l1
+      (i64.const 1)))
+  (get_local $l1))
+(table $T0 0 anyfunc)
+(memory $memory (export "memory") 17)
+(data (i32.const 4) "\10\00\10\00"))
+{% endhighlight %}
+    </div> 
+</div>
