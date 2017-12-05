@@ -122,3 +122,23 @@ pub unsafe fn multiply_by_4(a: i32) {
         </script>
     </div> 
 </div>
+<br>
+
+<div class="card">
+    <div class="card-header">WebAssembly text format</div>
+    <div class="card-body">
+{% highlight wast %}
+(module
+(type $t0 (func (param i32)))
+(import "env" "js_func" (func $env.js_func (type $t0)))
+(func $multiply_by_4 (export "multiply_by_4") (type $t0) (param $p0 i32)
+  (call $env.js_func
+    (i32.shl
+      (get_local $p0)
+      (i32.const 2))))
+(table $T0 0 anyfunc)
+(memory $memory (export "memory") 17)
+(data (i32.const 4) "\10\00\10\00"))
+{% endhighlight %}
+    </div> 
+</div>
