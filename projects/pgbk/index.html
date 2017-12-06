@@ -1,0 +1,32 @@
+---
+layout: default
+title: Password Generator By Keyword
+---
+
+<h1>{{ page.title }}</h1>
+
+<div class="form-group">
+    <label for="serviceName">Service name:</label>
+    <input class="form-control" id="serviceName">
+
+    <label for="keyword">Keyword:</label>
+    <input class="form-control" id="keyword">
+
+    <label for="passwordLength">Length of password:</label>
+    <input type="number" class="form-control" id="passwordLength" min=8 max=32>
+
+    <label for="password">Password:</label>
+    <input class="form-control" id="password" disabled>
+
+    <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" value="" id="useSpecialCharacters">Use special characters
+    </label>
+</div>
+
+<p>Check the password on <a target="_blank" href="http://www.passwordmeter.com/">The Password Meter</a></p>
+
+
+<script src="{{ site.url }}/assets/js/bundle.js"></script>
+<script src="script.js"></script>
+
+{% include disqus_comments.html %}
