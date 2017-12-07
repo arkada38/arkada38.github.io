@@ -10,7 +10,8 @@ window.onload = function () {
         keyword = document.querySelector('#keyword'),
         passwordLength = document.querySelector('#passwordLength'),
         useSpecialCharacters = document.querySelector('#useSpecialCharacters'),
-        password = document.querySelector('#password');
+        password = document.querySelector('#password'),
+        copy = document.querySelector('#copy');
 
     let imports = {
         round: Math.round
@@ -21,13 +22,15 @@ window.onload = function () {
             exports = mod.exports;
 
             let generate_password = () => {
-                let s = exports.generate_password(
-                    newString(exports, serviceName.value),
-                    newString(exports, keyword.value),
-                    passwordLength.value,
-                    useSpecialCharacters.checked
-                );
-                password.value = copyCStr(exports, s);
+                if (passwordLength.value >= 8 && passwordLength.value <= 60) {
+                    let s = exports.generate_password(
+                        newString(exports, serviceName.value),
+                        newString(exports, keyword.value),
+                        passwordLength.value,
+                        useSpecialCharacters.checked
+                    );
+                    password.value = copyCStr(exports, s);
+                } else password.value = '';
             };
 
             serviceName.oninput = generate_password;
@@ -35,4 +38,9 @@ window.onload = function () {
             passwordLength.oninput = generate_password;
             useSpecialCharacters.onchange = generate_password;
         });
+
+    copy.onclick = () => {
+        password.select();
+        document.execCommand("Copy");
+    };
 };
