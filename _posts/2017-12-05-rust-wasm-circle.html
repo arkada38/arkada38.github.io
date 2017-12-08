@@ -71,9 +71,7 @@ window.onload = function() {
                 
             if (area != document.activeElement)
                 area.value = a;
-        },
-        get_pi: () => Math.PI,
-        sqrt: n => Math.sqrt(n)
+        }
     };
 
     fetch('build/main.wasm')
@@ -93,19 +91,18 @@ window.onload = function() {
             <div id="rs" class="container tab-pane fade"><br>
 {% highlight rust %}
 use std::os::raw::c_double;
+use std::f64::consts::PI;
 
 // These functions are provided by the runtime in env.imports js object
 extern "C" {
     fn set_params(_: c_double, _: c_double, _: c_double, _: c_double);
-    fn get_pi() -> c_double;
-    fn sqrt(_: c_double) -> c_double;
 }
 
 #[no_mangle]
 pub unsafe fn set_radius(r: c_double) {
     let d = 2.0 * r;
-    let p = 2.0 * get_pi() * r;
-    let a = get_pi() * r * r;
+    let p = 2.0 * PI * r;
+    let a = PI * r * r;
     set_params(r, d, p, a);
 }
 
@@ -117,13 +114,13 @@ pub unsafe fn set_diameter(d: c_double) {
 
 #[no_mangle]
 pub unsafe fn set_perimeter(p: c_double) {
-    let r = p / 2.0 / get_pi();
+    let r = p / 2.0 / PI;
     set_radius(r);
 }
 
 #[no_mangle]
 pub unsafe fn set_area(a: c_double) {
-    let r = sqrt(a / get_pi());
+    let r = (a / PI).sqrt();
     set_radius(r);
 }
 {% endhighlight %}
@@ -174,9 +171,7 @@ pub unsafe fn set_area(a: c_double) {
                         
                     if (area != document.activeElement)
                         area.value = a;
-                },
-                get_pi: () => Math.PI,
-                sqrt: n => Math.sqrt(n)
+                }
             };
         
             fetch("{{ site.url }}/assets/wasm/circle.wasm")
