@@ -117,6 +117,10 @@ pub fn to_uppercase(ptr: *mut c_char) -> *mut c_char {
 <p>We need to encode the string, allocate some space in the exported memory buffer and copy over the string for sending the string from JavaScript to Rust.
 On return of the Rust function, we decode the new string from the memory buffer.</p>
 
+<div class="alert alert-info">
+    The good answer on the <a href="https://stackoverflow.com/a/41372484/4344645" target="_blank">Stack Overflow</a>.
+</div>
+
 <div class="alert alert-primary">
     The helper functions are defined in <a href="{{ site.url }}/assets/js/bundle.js">bundle.js</a>.
 </div>
