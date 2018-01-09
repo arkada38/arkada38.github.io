@@ -1,29 +1,48 @@
 <footer class="container-fluid bg-light mt-5">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="mailto:arkada38@gmail.com">
+            <a class="nav-link" href="mailto:arkada38@gmail.com" id="mail">
                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="https://github.com/arkada38/" target="_blank">
+            <a class="nav-link" href="https://github.com/arkada38/" target="_blank" id="github">
                 <i class="fa fa-github" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="https://twitter.com/arkada38/" target="_blank">
+            <a class="nav-link" href="https://twitter.com/arkada38/" target="_blank" id="twitter">
                 <i class="fa fa-twitter" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="https://www.linkedin.com/in/arkadiy-kuznetsov-598715120/" target="_blank">
+            <a class="nav-link" href="https://www.linkedin.com/in/arkadiy-kuznetsov-598715120/" target="_blank" id="linkedin">
                 <i class="fa fa-linkedin" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="https://stackoverflow.com/users/4344645/arkadiy-kuznetsov/" target="_blank">
+            <a class="nav-link" href="https://stackoverflow.com/users/4344645/arkadiy-kuznetsov/" target="_blank" id="stackoverflow">
                 <i class="fa fa-stack-overflow" aria-hidden="true"></i>
             </a>
         </li>
     </ul>
 </footer>
+
+{% if jekyll.environment == 'production' %}
+<script>
+    document.getElementById('mail').onclick = () =>
+        ga('send', 'event', 'Footer', 'click', 'Mail');
+
+    document.getElementById('github').onclick = () =>
+        ga('send', 'event', 'Footer', 'click', 'GitHub');
+
+    document.getElementById('twitter').onclick = () =>
+        ga('send', 'event', 'Footer', 'click', 'Twitter');
+
+    document.getElementById('linkedin').onclick = () =>
+        ga('send', 'event', 'Footer', 'click', 'LinkedIn');
+
+    document.getElementById('stackoverflow').onclick = () =>
+        ga('send', 'event', 'Footer', 'click', 'Stackoverflow');
+</script>
+{% endif %}
