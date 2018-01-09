@@ -1,0 +1,135 @@
+---
+layout: post
+title: "Hello, stdweb!"
+date: 2018-01-09
+categories: [rust, wasm]
+---
+
+<p>
+    Lets create primitive cargo project with <a href="https://github.com/koute/stdweb">stdweb</a> library.
+    We'll change only the header on the index page from rust code.
+</p>
+
+<div class="card">
+    <div class="card-header">Preparation</div>
+    <div class="card-body">
+<p>Installing <a href="https://github.com/koute/cargo-web">cargo-web</a></p>
+
+{% highlight bash %}
+cargo install -f cargo-web
+{% endhighlight %}
+
+<p>Creating project</p>
+
+{% highlight bash %}
+cargo new hello_stdweb --bin
+{% endhighlight %}
+
+<p>Adding dependency in <mark>cargo.toml</mark></p>
+
+{% highlight bash %}
+[dependencies]
+stdweb = "0.3.0"
+{% endhighlight %}
+    </div> 
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Files creation</div>
+    <div class="card-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#rs">src/main.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#index">static/index.html</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="rs" class="container tab-pane active"><br>
+{% highlight rust %}
+extern crate stdweb;
+
+use stdweb::web::{
+    INode,
+    document
+};
+
+fn main() {
+    stdweb::initialize();
+
+    let header = document().query_selector("h1").unwrap();
+    header.set_text_content("Hello, stdweb!");
+}
+{% endhighlight %}
+            </div>
+            <div id="index" class="container tab-pane fade"><br>
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello, stdweb!</title>
+</head>
+<body>
+    <h1>Header!</h1>
+    <script src="js/app.js"></script>
+</body>
+</html>
+{% endhighlight %}
+                <p><mark>/js/app.js</mark> is a wrapper for <mark>wasm</mark> module.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Running</div>
+    <div class="card-body">
+{% highlight bash %}
+cargo web start --target-webasm
+{% endhighlight %}
+<p>Output</p>
+{% highlight bash %}
+?[m?[m?[32m?[1m    Finished?[m release [optimized] target(s) in 0.0 secs
+
+If you need to serve any extra files put them in the 'static' directory
+in the root of your crate; they will be served alongside your application.
+You can also put a 'static' directory in your 'src' directory.
+
+Your application is being served at '/js/app.js'. It will be automatically
+rebuilt if you make any changes in your code.
+
+You can access the web server at `http://127.0.0.1:8000`.
+{% endhighlight %}
+    </div> 
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Result</div>
+    <div class="card-body">
+        <h1>Hello, stdweb!</h1>
+    </div> 
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Building</div>
+    <div class="card-body">
+{% highlight bash %}
+cargo web build --target-webasm
+{% endhighlight %}
+        <p>You can find the next generated files:</p>
+        <ul class="list-group">
+            <li class="list-group-item">hello_stdweb/target/wasm32-unknown-unknown/release/hello_stdweb.js</li>
+            <li class="list-group-item">hello_stdweb/target/wasm32-unknown-unknown/release/hello_stdweb.wasm</li>
+        </ul>
+    </div> 
+</div>
