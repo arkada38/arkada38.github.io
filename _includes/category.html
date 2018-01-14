@@ -1,5 +1,25 @@
-<div class="list-group">
-	{% for post in site.categories[include.category] %}
-		<a href="{{ post.url }}" title="{{ post.title }}" class="list-group-item list-group-item-action">{{ post.date | date_to_string }} - {{ post.title }}</a>
-	{% endfor %}
+<div class="row">
+    <div class="col-md-9">
+        <h1>{{ include.title }}</h1>
+        <div class="list-group">
+			{% if include.category == "all" %}
+				{% for post in site.posts %}
+					<a href="{{ post.url }}" title="{{ post.title }}" class="list-group-item list-group-item-action">{{ post.date | date_to_string }} - {{ post.title }}</a>
+				{% endfor %}
+			{% endif %}
+
+			{% for post in site.categories[include.category] %}
+				<a href="{{ post.url }}" title="{{ post.title }}" class="list-group-item list-group-item-action">{{ post.date | date_to_string }} - {{ post.title }}</a>
+			{% endfor %}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <h1>Categories</h1>
+        <div class="list-group">
+            <a href="{{ site.url }}/posts/" class="list-group-item list-group-item-action {% if include.category == 'all' %}active{% endif %}">All</a>
+			<a href="{{ site.url }}/posts/rust" class="list-group-item list-group-item-action {% if include.category == 'rust' %}active{% endif %}">Rust</a>
+			<a href="{{ site.url }}/posts/wasm" class="list-group-item list-group-item-action {% if include.category == 'wasm' %}active{% endif %}">WebAssembly</a>
+			<a href="{{ site.url }}/posts/turtle" class="list-group-item list-group-item-action {% if include.category == 'turtle' %}active{% endif %}">Turtle</a>
+        </div>
+    </div>
 </div>
