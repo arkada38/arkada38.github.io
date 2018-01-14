@@ -6,9 +6,32 @@ title: Useful Links
 <h1>{{ page.title }}</h1>
 
 <div class="list-group">
-    <a href="https://www.rust-lang.org/ru-RU/" target="_blank" class="list-group-item list-group-item-action">Rust</a>
-    <a href="http://webassembly.org/" target="_blank" class="list-group-item list-group-item-action">WebAssembly</a>
-    <a href="https://cdn.rawgit.com/WebAssembly/wabt/fb986fbd/demo/index.html" target="_blank" class="list-group-item list-group-item-action">WABT: The WebAssembly Binary Toolkit</a>
-    <a href="https://www.hellorust.com/" target="_blank" class="list-group-item list-group-item-action">Rust for the Web - Hello, Rust!</a>
-    <a href="https://play.rust-lang.org/" target="_blank" class="list-group-item list-group-item-action">Rust playground</a>
+    <a href="https://www.rust-lang.org/ru-RU/" target="_blank" class="list-group-item list-group-item-action" id="rust">Rust</a>
+    <a href="http://webassembly.org/" target="_blank" class="list-group-item list-group-item-action" id="wasm">WebAssembly</a>
+    <a href="https://cdn.rawgit.com/WebAssembly/wabt/fb986fbd/demo/index.html" target="_blank" class="list-group-item list-group-item-action" id="wabt">WABT: The WebAssembly Binary Toolkit</a>
+    <a href="https://www.hellorust.com/" target="_blank" class="list-group-item list-group-item-action" id="hello">Rust for the Web - Hello, Rust!</a>
+    <a href="https://play.rust-lang.org/" target="_blank" class="list-group-item list-group-item-action" id="playground">Rust playground</a>
+    <a href="https://github.com/arkada38/Rust-Design-Patterns" target="_blank" class="list-group-item list-group-item-action" id="patterns">Design patterns via Rust</a>
 </div>
+
+{% if jekyll.environment == 'production' %}
+<script>
+    document.getElementById('rust').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'Rust');
+
+    document.getElementById('wasm').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'WebAssembly');
+
+    document.getElementById('wabt').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'WABT');
+
+    document.getElementById('hello').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'Hello, Rust');
+
+    document.getElementById('playground').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'Rust playground');
+
+    document.getElementById('patterns').onclick = () =>
+        ga('send', 'event', 'Useful-links', 'click', 'Design patterns');
+</script>
+{% endif %}
