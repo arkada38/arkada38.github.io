@@ -2,7 +2,7 @@
 layout: post
 title: "Fractal tree"
 date: 2018-01-11
-categories: [rust]
+categories: [rust, turtle]
 ---
 
 <p>
@@ -10,7 +10,7 @@ categories: [rust]
     Making the factorial tree allows us to demonstrate how this library is drawing amazing images in an easy way.
 </p>
 
-<img src="{{ site.url }}/assets/img/tree_3.gif">
+<img src="{{ site.url }}/assets/img/tree/tree_3.gif">
 
 <div class="card">
     <div class="card-header">Preparation</div>
@@ -54,7 +54,7 @@ fn main() {
             Every small square represents itself the large square of the next level.
         </p>
 
-        <img src="{{ site.url }}/assets/img/tree_1_2.PNG">
+        <img src="{{ site.url }}/assets/img/tree/tree_1_2.PNG">
 
 <p>We can use the recursion. Lets create the <mark>draw</mark> function.</p>
 {% highlight rust %}
@@ -168,6 +168,6 @@ fn get_color(position: Point) -> Color {
     <div class="card-header">Bonus</div>
     <div class="card-body">
         <p>It's a tree with 9 level of depth.</p>
-        <img src="{{ site.url }}/assets/img/tree_9.PNG">
+        <img src="{{ site.url }}/assets/img/tree/tree_9.PNG">
     </div> 
 </div>
