@@ -30,12 +30,12 @@ Changing the `src/main.rs`
 ```rust
 extern crate turtle;
 
-use turtle::Turtle;
+use turtle::{Turtle, Color, color};
 
 const SIZE: f64 = 1.0;
-const FIRST_COLOR: [f64; 4] = [62.0, 114.0, 29.0, 1.0];
-const SECOND_COLOR: [f64; 4] = [119.0, 178.0, 85.0, 1.0];
-const EYE_COLOR: &str = "black";
+const SHELL_COLOR: Color = Color {red: 62.0, green: 114.0, blue: 29.0, alpha: 1.0};
+const BODY_COLOR: Color = Color {red: 119.0, green: 178.0, blue: 85.0, alpha: 1.0};
+const EYE_COLOR: Color = color::BLACK;
 
 fn main() {
     let mut turtle = Turtle::new();
@@ -50,16 +50,16 @@ fn main() {
 Our turtle consists of the next parts:
 
 <div class="list-group">
-  <a href="#panther" class="list-group-item list-group-item-action">Panther</a>
+  <a href="#shell" class="list-group-item list-group-item-action">Shell</a>
   <a href="#tail" class="list-group-item list-group-item-action">Tail</a>
   <a href="#legs" class="list-group-item list-group-item-action">Two legs</a>
   <a href="#neck" class="list-group-item list-group-item-action">Neck</a>
   <a href="#head" class="list-group-item list-group-item-action">Head</a>
   <a href="#eye" class="list-group-item list-group-item-action">Eye</a>
-  <a href="#highlights" class="list-group-item list-group-item-action">Highlights on the panther</a>
+  <a href="#highlights" class="list-group-item list-group-item-action">Highlights on the shell</a>
 </div>
 
-### Panther
+### Shell
 
 Adding code to the `main` function
 
@@ -68,13 +68,13 @@ turtle.pen_up();
 turtle.set_x(-280.0);
 turtle.set_y(-90.0);
 
-draw_panther(&mut turtle);
+draw_shell(&mut turtle);
 ```
 
-Creating `draw_panther` function
+Creating `draw_shell` function
 
 ```rust
-fn draw_panther(turtle: &mut Turtle) {
+fn draw_shell(turtle: &mut Turtle) {
     turtle.set_fill_color(FIRST_COLOR);
     turtle.begin_fill();
 
@@ -102,7 +102,7 @@ fn draw_panther(turtle: &mut Turtle) {
 }
 ```
 
-![Panther]({{ site.url }}/assets/img/creating_a_turtle/panther.PNG)
+![Shell]({{ site.url }}/assets/img/creating_a_turtle/shell.PNG)
 
 ### Tail
 
@@ -455,7 +455,7 @@ fn main() {
     turtle.set_x(-280.0);
     turtle.set_y(-90.0);
 
-    draw_panther(&mut turtle);
+    draw_shell(&mut turtle);
 
     draw_tail(&mut turtle);
 
