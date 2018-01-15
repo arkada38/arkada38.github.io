@@ -1,0 +1,270 @@
+---
+layout: post
+title: "Right triangle"
+date: 2018-01-15
+categories: [rust, wasm]
+---
+
+<p>
+    This is the sample of rust project using stdweb library.
+    The main goal is to create a simple app with html view and logic only on rust side.
+</p>
+<p>
+    User can put the data into input fields and get the answer by clicking on the <i>calculate</i> button.
+    Also he can clear the form by clicking on the <i>erase</i> button.<br>
+    So we create two <i>click event listeners</i> on the buttons in <i>rust</i> code.
+</p>
+
+<div class="card">
+    <div class="card-header">Project creation</div>
+    <div class="card-body">
+<p>Create new rust project</p>
+{% highlight bash %}
+cargo new --bin right_triangle
+{% endhighlight %}
+
+<p>Add <mark>stdweb</mark> as a dependency</p>
+{% highlight ini %}
+[dependencies]
+stdweb = "0.3.0"
+{% endhighlight %}
+    </div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Files creation</div>
+    <div class="card-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#rs">src/main.rs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#index">static/index.html</a>
+            </li>
+        </ul>
+            
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="rs" class="container tab-pane active"><br>
+{% highlight rust %}
+#[macro_use]
+extern crate stdweb;
+
+use stdweb::unstable::TryInto;
+use stdweb::web::{
+    IEventTarget,
+    document
+};
+
+use stdweb::web::event::ClickEvent;
+use stdweb::web::html_element::InputElement;
+
+macro_rules! enclose {
+    ( ($( $x:ident ),*) $y:expr ) => {
+        {
+            $(let $x = $x.clone();)*
+            $y
+        }
+    };
+}
+
+fn main() {
+    stdweb::initialize();
+
+    let calculate = document().query_selector("#calculate").unwrap();
+    calculate.add_event_listener( enclose!( () move |_: ClickEvent| {
+        let a_input: InputElement = document().query_selector("#a").unwrap().try_into().unwrap();
+        let b_input: InputElement = document().query_selector("#b").unwrap().try_into().unwrap();
+        let c_input: InputElement = document().query_selector("#c").unwrap().try_into().unwrap();
+
+        let mut a = a_input.value().into_string().unwrap().parse::<f32>();
+        let mut b = b_input.value().into_string().unwrap().parse::<f32>();
+        let mut c = c_input.value().into_string().unwrap().parse::<f32>();
+
+        js!( document.getElementById("error").style = "display: none;" );
+
+        if c.is_err() && a.is_ok() && b.is_ok() {
+            let (a, b) = (a.clone().unwrap(), b.clone().unwrap());
+
+            if a > 0.0 && b > 0.0 {
+                c = Ok((a.powf(2.0) + b.powf(2.0)).sqrt());
+                c_input.set_value(c.unwrap());
+            }
+            else {
+                js!( document.getElementById("error").style = "display: block;" );
+            }
+        }
+
+        else if a.is_err() && b.is_ok() && c.is_ok() {
+            let (b, c) = (b.clone().unwrap(), c.clone().unwrap());
+
+            if c > b && b > 0.0 {
+                a = Ok((c.powf(2.0) - b.powf(2.0)).sqrt());
+                a_input.set_value(a.unwrap());
+            }
+            else {
+                js!( document.getElementById("error").style = "display: block;" );
+            }
+        }
+
+        else if b.is_err() && c.is_ok() && a.is_ok() {
+            let (c, a) = (c.clone().unwrap(), a.clone().unwrap());
+
+            if c > a && a > 0.0 {
+                b = Ok((c.powf(2.0) - a.powf(2.0)).sqrt());
+                b_input.set_value(b.unwrap());
+            }
+            else {
+                js!( document.getElementById("error").style = "display: block;" );
+            }
+        }
+
+        else {
+            js!( document.getElementById("error").style = "display: block;" );
+        }
+    }));
+
+    let erase = document().query_selector("#erase").unwrap();
+    erase.add_event_listener( enclose!( () move |_: ClickEvent| {
+        let a_input: InputElement = document().query_selector("#a").unwrap().try_into().unwrap();
+        let b_input: InputElement = document().query_selector("#b").unwrap().try_into().unwrap();
+        let c_input: InputElement = document().query_selector("#c").unwrap().try_into().unwrap();
+
+        a_input.set_value("");
+        b_input.set_value("");
+        c_input.set_value("");
+
+        js!( document.getElementById("error").style = "display: none;" );
+    }));
+}
+{% endhighlight %}
+            </div>
+            <div id="index" class="container tab-pane fade">
+                <p>Create <mark>static</mark> folder in the root of project and create inside <mark>index.html</mark> with code bellow.</p>
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Right triangle</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Right triangle</h1>
+
+        <div class="row">
+            <div class="col-md">
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-block" id="calculate">Calculate</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-block" id="erase">Erase</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a">Cathete A:</label>
+                    <input type="number" class="form-control" id="a" min=0 step="any">
+
+                    <label for="b">Cathete B:</label>
+                    <input type="number" class="form-control" id="b" min=0 step="any">
+
+                    <label for="c">Hypotenuse C:</label>
+                    <input type="number" class="form-control" id="c" min=0 step="any">
+                </div>
+            </div>
+            <div class="col-md">
+                <img src="right_triangle.png">
+                <div class="alert alert-danger" id="error" style="display: none">
+                    <strong>Error!</strong> Please check input data.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>
+{% endhighlight %}
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Running</div>
+    <div class="card-body">
+{% highlight bash %}
+cargo web start --target-webasm
+{% endhighlight %}
+<p>Output</p>
+{% highlight bash %}
+?[m?[m?[32m?[1m    Finished?[m release [optimized] target(s) in 0.0 secs
+
+If you need to serve any extra files put them in the 'static' directory
+in the root of your crate; they will be served alongside your application.
+You can also put a 'static' directory in your 'src' directory.
+
+Your application is being served at '/js/app.js'. It will be automatically
+rebuilt if you make any changes in your code.
+
+You can access the web server at `http://127.0.0.1:8000`.
+{% endhighlight %}
+    </div> 
+</div>
+<br>
+
+<div class="card">
+    <div class="card-header">Result</div>
+    <div class="card-body">
+        <div class="container">
+            <h1>Right triangle</h1>
+        
+            <div class="row">
+                <div class="col-md">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-block" id="calculate">Calculate</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-block" id="erase">Erase</button>
+                        </div>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="a">Cathete A:</label>
+                        <input type="number" class="form-control" id="a" min=0 step="any">
+    
+                        <label for="b">Cathete B:</label>
+                        <input type="number" class="form-control" id="b" min=0 step="any">
+    
+                        <label for="c">Hypotenuse C:</label>
+                        <input type="number" class="form-control" id="c" min=0 step="any">
+                    </div>
+                </div>
+                <div class="col-md">
+                    <img src="{{ site.url }}/assets/img/right_triangle.PNG">
+                    <div class="alert alert-danger" id="error" style="display: none">
+                        <strong>Error!</strong> Please check input data.
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script src="{{ site.url }}/assets/wasm/right_triangle.js"></script>
+    </div> 
+</div>
