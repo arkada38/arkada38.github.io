@@ -61,6 +61,8 @@ Our turtle consists of the next parts:
   <a href="#highlights" class="list-group-item list-group-item-action">Highlights on the shell</a>
 </div>
 
+To draw arcs we need to use the loops which are determine tilt angle and the length. The more sophisticated the figure is the more loops it requires to make.
+
 ### Shell
 
 Adding code to the `main` function
@@ -246,6 +248,8 @@ fn draw_neck(turtle: &mut Turtle) {
 ![Neck]({{ site.url }}/assets/img/creating_a_turtle/neck.PNG)
 
 ### Head
+
+In our case the most difficult part of the turtle is head. It requires six loops to draw. There was a way to draw it as one circle but I've decided to make it look a like a real turtle's head.
 
 Adding code to the `main` function
 
