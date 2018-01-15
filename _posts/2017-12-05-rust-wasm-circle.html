@@ -138,17 +138,24 @@ pub unsafe fn set_area(a: c_double) {
 <div class="card">
     <div class="card-header">Result</div>
     <div class="card-body">
-                <label for="radius">Radius:</label>
-                <input class="form-control" type="number" id="radius" min="0">
-                
-                <label for="diameter">Diameter:</label>
-                <input class="form-control" type="number" id="diameter" min="0">
-                
-                <label for="perimeter">Perimeter:</label>
-                <input class="form-control" type="number" id="perimeter" min="0">
-                
-                <label for="area">Area:</label>
-                <input class="form-control" type="number" id="area" min="0">
+            <div class="row">
+                <div class="col-md">
+                    <label for="radius">Radius:</label>
+                    <input class="form-control" type="number" id="radius" min="0">
+                    
+                    <label for="diameter">Diameter:</label>
+                    <input class="form-control" type="number" id="diameter" min="0">
+                    
+                    <label for="perimeter">Perimeter:</label>
+                    <input class="form-control" type="number" id="perimeter" min="0">
+                    
+                    <label for="area">Area:</label>
+                    <input class="form-control" type="number" id="area" min="0">
+                </div>
+                <div class="col-md">
+                    <img src="{{ site.url }}/assets/img/circle.PNG">
+                </div>
+            </div>
         <script>
         window.onload = function() {
             window.exports = {};
