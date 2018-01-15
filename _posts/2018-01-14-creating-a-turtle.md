@@ -7,6 +7,7 @@ comments: true
 ---
 
 Let's have some fun and create the real turtle drawing using [Turtle](http://turtle.rs/).
+Inspired by child's drawing of turtle we are going to draw and paint figures which consists of arcs and straight lines.
 
 ![Turtle]({{ site.url }}/assets/img/creating_a_turtle/turtle.PNG)
 
@@ -47,6 +48,7 @@ fn main() {
 
 ## Basic steps
 
+Lets divide the turtle on the different parts and draw it separatly.
 Our turtle consists of the next parts:
 
 <div class="list-group">
@@ -75,7 +77,7 @@ Creating `draw_shell` function
 
 ```rust
 fn draw_shell(turtle: &mut Turtle) {
-    turtle.set_fill_color(FIRST_COLOR);
+    turtle.set_fill_color(SHELL_COLOR);
     turtle.begin_fill();
 
     for _ in 0..180 {
@@ -116,7 +118,7 @@ Creating `draw_tail` function
 
 ```rust
 fn draw_tail(turtle: &mut Turtle) {
-    turtle.set_fill_color(SECOND_COLOR);
+    turtle.set_fill_color(BODY_COLOR);
     turtle.begin_fill();
 
     turtle.left(90.0);
@@ -334,7 +336,7 @@ fn draw_eye(turtle: &mut Turtle) {
 Adding code to the `main` function
 
 ```rust
-turtle.set_fill_color(SECOND_COLOR);
+turtle.set_fill_color(BODY_COLOR);
 
 turtle.left(175.0);
 turtle.forward(SIZE * 43.0);
@@ -490,7 +492,7 @@ fn main() {
 
     draw_eye(&mut turtle);
 
-    turtle.set_fill_color(SECOND_COLOR);
+    turtle.set_fill_color(BODY_COLOR);
 
     turtle.left(175.0);
     turtle.forward(SIZE * 43.0);
