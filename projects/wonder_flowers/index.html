@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flowers delivery</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <h1>Доставка цветов</h1>
+
+        <div class="row">
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-header">
+                        Доставка из Wonder Flowers
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Время в пути:</label>
+                                    <input type="number" class="form-control" v-model.number="duration" min=0>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Стоимость:</label>
+                                    <input type="number" class="form-control" v-model.number="cost" disabled>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-block" v-on:click="add">
+                                Добавить дополнительную доставку
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="additional.length > 0">
+                    <calc-item
+                        v-for="(item, index) in additional"
+                        v-on:add="addAfterItem"
+                        v-on:remove="removeItem"
+                        v-on:update="updateItem"
+                        v-bind:key="item.id"
+                        v-bind:id="item.id"
+                        v-bind:index="index">
+                    </calc-item>
+                    <br>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Итого в пути:</label>
+                                        <input type="number" class="form-control" v-model="totalDuration" disabled>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Итого:</label>
+                                        <input type="number" class="form-control" v-model="totalCost" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <p>
+                    Стоимость доставки из цветочного магазина рассчитывается по следующей формуле:<br>
+                    <mark>cost = 450 + atan((duration - 30) / 20) * 230</mark>
+                </p>
+                <p>
+                    При совмещении нескольких заказов стоимость каждого последующего заказа рассчитывается как:<br>
+                    <mark>cost = 5 * duration</mark>
+                </p>
+                <p>
+                    <mark>cost</mark> - стоимость доставки<br>
+                    <mark>duration</mark> - продолжительность доставки в минутах в одну сторону
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
