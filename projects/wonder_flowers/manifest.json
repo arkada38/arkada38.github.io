@@ -2,7 +2,7 @@
     "name": "Flowers delivery",
     "short_name": "Flowers delivery",
     "description": "Доставка цветов из магазина Wonder Flowers",
-    "start_url": "/?utm_source=homescreen",
+    "start_url": "/projects/wonder_flowers/",
     "background_color": "#000000",
     "theme_color": "aliceblue",
     "display": "standalone",
