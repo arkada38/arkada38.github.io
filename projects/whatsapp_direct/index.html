@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="manifest" href="manifest.json" />
+    <title>WhatsApp Direct</title>
+
+    <link rel="icon" href="icon-512.png" sizes="512x512" />
+    <link rel="icon" href="icon-256.png" sizes="256x256" />
+    <link rel="icon" href="icon-128.png" sizes="128x128" />
+    <link rel="icon" href="icon-96.png" sizes="96x96" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <h1>Прямая связь WhatsApp</h1>
+
+        <div class="row">
+            <div class="col-sm">
+                <div class="card">
+                    <div class="card-body">
+                        <label>Номер телефона:</label>
+                        <div class="input-group mb-3">
+                            <input type="tel" class="form-control" v-model="tel" v-on:input="saveTel()">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" v-on:click="clearTel()">X</button>
+                            </div>
+                        </div>
+
+                        <label>Сообщение (необязательно):</label>
+                        <div class="input-group mb-3">
+                            <input class="form-control" v-model="message" v-on:input="saveMessage()">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" v-on:click="clearMessage()">X</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary btn-block" v-on:click="send">
+                            Открыть в WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <p>
+                    Телефонный номер переводится в числовой формат автоматически (удаляются все лишние символы, остаются только цифры).
+                </p>
+                <p>
+                    Если номер телефона начинается на
+                    <mark>0</mark>, то телефонному номеру автоматически присваивается код страны
+                    <mark>+66</mark>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="serviceworker.js"></script>
+</body>
+
+</html>
