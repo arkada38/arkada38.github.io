@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>{{ page.title }}</title>
 
-        <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-        <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
 
-        {% include analytics.html %}
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-sm bg-light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% include analytics.html %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-light">
+        <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            area-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span> Home</a>
+                    <a class="nav-link" href="/">
+                        <span class="icon is-small">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                        </span> Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/posts"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Posts</a>
+                    <a class="nav-link" href="/posts">
+                        <i class="fa fa-newspaper-o" aria-hidden="true"></i> Posts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/projects"><i class="fa fa-bicycle" aria-hidden="true"></i> Projects</a>
+                    <a class="nav-link" href="/projects">
+                        <i class="fa fa-bicycle" aria-hidden="true"></i> Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/useful-links"><i class="fa fa-link" aria-hidden="true"></i> Useful Links</a>
+                    <a class="nav-link" href="/useful-links">
+                        <i class="fa fa-link" aria-hidden="true"></i> Useful Links</a>
                 </li>
             </ul>
-        </nav>
-
-        <div class="container">
-            {{ content }}
         </div>
+    </nav>
 
-        {% include footer.html %}
-    </body>
+    <div class="container">
+        {{ content }}
+    </div>
+
+    {% include footer.html %}
+</body>
+
 </html>
