@@ -29,11 +29,10 @@
 
 <body>
     <div id="app" class="container">
-        <h1>Прямая связь</h1>
-
         <div class="row">
             <div class="col-sm">
                 <div class="card">
+                    <div class="card-header">Прямая связь</div>
                     <div class="card-body">
                         <label>Номер телефона:</label>
                         <div class="input-group mb-3">
@@ -43,15 +42,14 @@
                             </div>
                         </div>
 
-                        <label>Сообщение (необязательно):</label>
-                        <div class="input-group mb-3">
-                            <input class="form-control" v-model="message" v-on:input="saveMessage()">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" v-on:click="clearMessage()">X</button>
-                            </div>
+                        <div class="form-group">
+                            <label for="comment">Сообщение (необязательно):</label>
+                            <textarea class="form-control" rows="5" v-model="message" v-on:input="saveMessage()"></textarea>
                         </div>
 
-                        <button type="button" class="btn btn-outline-primary btn-block" v-on:click="send">
+                        <button type="button" class="btn btn-block btn-outline-primary" v-on:click="clearMessage()">Очистить текст сообщения</button>
+
+                        <button type="button" class="btn btn-block btn-success" v-on:click="send">
                             Открыть в WhatsApp
                         </button>
                     </div>
