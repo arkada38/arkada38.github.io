@@ -6,8 +6,8 @@ var app = new Vue({
   },
   computed: {
     tel_numeric: function () {
-      var numbers = this.tel.replace(/\D/g,'')
-      
+      var numbers = this.tel.replace(/\D/g, '')
+
       if (numbers.charAt(0) == "0")
         numbers = numbers.replace("0", "66")
 
@@ -15,16 +15,16 @@ var app = new Vue({
     },
     message_encoded: function () {
       return encodeURI(this.message).replace(/%5B/g, '[').replace(/%5D/g, ']')
+    },
+    whatsapp_link: function () {
+      return 'https://api.whatsapp.com/send?phone=' + this.tel_numeric + '&text=' + this.message_encoded
     }
   },
   methods: {
-    send: function () {
-      window.location.href = 'https://api.whatsapp.com/send?phone=' + this.tel_numeric + '&text=' + this.message_encoded
-    },
-    saveTel: function() {
+    saveTel: function () {
       localStorage.setItem('tel', this.tel)
     },
-    saveMessage: function() {
+    saveMessage: function () {
       localStorage.setItem('message', this.message)
     },
     clearTel: function () {

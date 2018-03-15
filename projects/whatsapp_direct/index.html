@@ -49,9 +49,7 @@
 
                         <button type="button" class="btn btn-block btn-outline-primary" v-on:click="clearMessage()">Очистить текст сообщения</button>
 
-                        <button type="button" class="btn btn-block btn-success" v-on:click="send">
-                            Открыть в WhatsApp
-                        </button>
+                        <a v-bind:href="whatsapp_link" class="btn btn-block btn-success" role="button">Открыть в WhatsApp</a>
                     </div>
                 </div>
             </div>
@@ -63,6 +61,9 @@
                     Если номер телефона начинается на
                     <mark>0</mark>, то телефонному номеру автоматически присваивается код страны
                     <mark>+66</mark>.
+                </p>
+                <p>
+                    При нажатии на кнопку "Открыть в WhatsApp", осуществляется переход по генерируемой ссылке. Эта ссылка доступна для копирования.
                 </p>
             </div>
         </div>
