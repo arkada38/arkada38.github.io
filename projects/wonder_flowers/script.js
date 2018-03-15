@@ -29,7 +29,7 @@ Vue.component('calc-item', {
   },
   computed: {
     cost: function () {
-      return this.duration * 5
+      return Math.round(Math.max(this.duration * 5, 100) /10) * 10
     }
   },
   methods: {
@@ -58,7 +58,7 @@ var app = new Vue({
   },
   computed: {
     cost: function () {
-      return Math.round(450 + Math.atan((this.duration - 30) / 20) * 230)
+      return Math.round((450 + Math.atan((this.duration - 30) / 20) * 230) / 10) * 10
     },
     totalDuration: function () {
       return this.duration + this.additionalDuration
