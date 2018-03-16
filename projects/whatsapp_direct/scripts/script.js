@@ -18,6 +18,14 @@ var app = new Vue({
     },
     whatsapp_link: function () {
       return 'https://api.whatsapp.com/send?phone=' + this.tel_numeric + '&text=' + this.message_encoded
+    },
+    country: function () {
+      var data = new libphonenumber.parse('+' + this.tel_numeric)
+      
+      if (data.country == undefined)
+        return ''
+
+      return data.country + ' - ' + getCountryName(data.country)
     }
   },
   methods: {

@@ -34,7 +34,7 @@
                 <div class="card">
                     <div class="card-header">Прямая связь</div>
                     <div class="card-body">
-                        <label>Номер телефона:</label>
+                        <label>Номер телефона: {{country}}</label>
                         <div class="input-group mb-3">
                             <input type="tel" class="form-control" v-model="tel" v-on:input="saveTel()">
                             <div class="input-group-append">
@@ -69,7 +69,9 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="scripts/libphonenumber-js.min.js"></script>
+    <script src="scripts/countries.js"></script>
+    <script src="scripts/script.js"></script>
     <script src="serviceworker.js"></script>
 </body>
 
