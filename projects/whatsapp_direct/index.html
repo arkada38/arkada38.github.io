@@ -34,7 +34,9 @@
                 <div class="card">
                     <div class="card-header">Прямая связь</div>
                     <div class="card-body">
-                        <label>Номер телефона: {{country}}</label>
+                        <label>Номер телефона:
+                            <span v-html="country"></span>
+                        </label>
                         <div class="input-group mb-3">
                             <input type="tel" class="form-control" v-model="tel" v-on:input="saveTel()">
                             <div class="input-group-append">
@@ -44,10 +46,29 @@
 
                         <div class="form-group">
                             <label for="comment">Сообщение (необязательно):</label>
-                            <textarea class="form-control" rows="5" v-model="message" v-on:input="saveMessage()"></textarea>
+
+                            <ul class="nav nav-pills nav-justified">
+                                <li class="nav-item">
+                                    <a class="nav-link" v-bind:class="{ active: active_tab == 0 }" v-on:click="setActiveTab(0)" href="#">I</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" v-bind:class="{ active: active_tab == 1 }" v-on:click="setActiveTab(1)" href="#">II</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" v-bind:class="{ active: active_tab == 2 }" v-on:click="setActiveTab(2)" href="#">III</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" v-bind:class="{ active: active_tab == 3 }" v-on:click="setActiveTab(3)" href="#">IV</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" v-bind:class="{ active: active_tab == 4 }" v-on:click="setActiveTab(4)" href="#">V</a>
+                                </li>
+                            </ul>
+
+                            <textarea class="form-control mt-3" rows="5" v-model="active_message" v-on:input="saveMessages()"></textarea>
                         </div>
 
-                        <button type="button" class="btn btn-block btn-outline-primary" v-on:click="clearMessage()">Очистить текст сообщения</button>
+                        <button type="button" class="btn btn-block btn-outline-primary" v-on:click="clearActiveMessage()">Очистить текст сообщения</button>
 
                         <a v-bind:href="whatsapp_link" class="btn btn-block btn-success" role="button">Открыть в WhatsApp</a>
                     </div>
