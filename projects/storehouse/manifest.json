@@ -1,0 +1,26 @@
+{
+    "name": "Storehouse",
+    "short_name": "Storehouse",
+    "description": "Учет прихода и расхода товаров",
+    "start_url": "/projects/storehouse/",
+    "background_color": "#000000",
+    "theme_color": "aliceblue",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ]
+}

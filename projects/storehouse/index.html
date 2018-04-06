@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="manifest" href="manifest.json" />
+    <title>Storehouse</title>
+
+    <link rel="icon" href="icon-256.png" sizes="256x256" />
+    <link rel="icon" href="icon-128.png" sizes="128x128" />
+    <link rel="icon" href="icon-96.png" sizes="96x96" />
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Storehouse">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Fontawesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c"
+        crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script src="moment.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <h1>Storehouse</h1>
+
+        <div class="row">
+            <div class="col-sm">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" v-bind:class="[{ active: mode === 'storehouse' }]" href="#" v-on:click="mode = 'storehouse'">Storehouse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" v-bind:class="[{ active: mode === 'store' }]" href="#" v-on:click="mode = 'store'">Store</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" v-bind:class="[{ active: mode === 'logs' }]" href="#" v-on:click="mode = 'logs'">Logs</a>
+                    </li>
+                </ul>
+
+                <store-group v-if="mode != 'logs'" v-for="(group, index) in groups" :key="group.id" :index="index" :name="group.name" :color="group.color"
+                    :items="group.items" :mode="mode" v-on:add-item="addNewItem" v-on:remove-group="removeGroup" v-on:remove-item="removeItem"
+                    v-on:increase-item="increaseItem" v-on:decrease-item="decreaseItem" v-on:change-item="changeItem" v-on:product-changed="productChanged"></store-group>
+
+                <button v-if="mode === 'storehouse'" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#newGroupModal">Add new group</button>
+
+                <div v-if="mode === 'logs'" class="list-group">
+                    <div class="card mb-3" v-for="(log, index) in logs" :key="log.id">
+                        <div class="card-header">{{log.title}}</div>
+                        <div class="card-body">{{log.message}}</div> 
+                        <div class="card-footer">{{getDate(log.date)}}</div>
+                    </div>
+                </div>
+
+                <button v-if="mode === 'store'" type="button" class="btn btn-primary btn-block" v-on:click="createProduct()" data-toggle="modal"
+                    data-target="#productModal">Create product</button>
+
+                <!-- Adding new group modal -->
+                <div class="modal fade" id="newGroupModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Adding new group</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Group name:</label>
+                                    <input type="text" class="form-control" v-model="newGroupName">
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" :disabled="newGroupName.length === 0" v-on:click="addNewGroup()">Add</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Adding new group modal -->
+
+                <!-- Numeric modal -->
+                <div class="modal fade" id="numericModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{ numericModal.title }}</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>{{ numericModal.fieldName }}:</label>
+                                    <input type="number" class="form-control" v-model="numericModal.value" min="0" step="1">
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" v-on:click="numericModal.onSuccess()">OK</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Numeric modal -->
+
+                <!-- YesNo modal -->
+                <div class="modal fade" id="yesNoModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{ yesNoModal.title }}</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <p v-html="yesNoModal.message"></p>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" v-on:click="yesNoModal.onSuccess()">Yes</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- YesNo modal -->
+
+                <!-- Adding/changing item modal -->
+                <div class="modal fade" id="itemModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{newItemModal.title}}</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Item name:</label>
+                                    <input type="text" class="form-control" v-model="newItemModal.name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Item price:</label>
+                                    <input type="number" class="form-control" v-model="newItemModal.price">
+                                </div>
+                                <div class="form-group">
+                                    <label>Item quantity:</label>
+                                    <input type="number" class="form-control" v-model="newItemModal.quantity">
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" :disabled="newItemModal.name.length === 0" v-on:click="newItemModal.onSuccess()">{{newItemModal.actionName}}</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Adding new item modal -->
+
+                <!-- Create/change product modal -->
+                <div class="modal fade" id="productModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">{{productModal.title}}</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <p v-for="item in productModal.items">
+                                    <span class="badge badge-danger">x{{item.quantity}}</span> {{item.name}} by
+                                    <span class="badge badge-warning">{{item.price}}</span>
+                                </p>
+                                <hr>
+                                <div class="form-group">
+                                    <label>Items cost:</label>
+                                    <input type="text" class="form-control" v-model="productModal.itemsCost" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Creational cost:</label>
+                                    <input type="text" class="form-control" v-model="productModal.creationalCost">
+                                </div>
+                                <div class="form-group">
+                                    <label>Delivery cost:</label>
+                                    <input type="number" class="form-control" v-model="productModal.deliveryCost">
+                                </div>
+                                <div class="form-group">
+                                    <label>Additional cost:</label>
+                                    <input type="number" class="form-control" v-model="productModal.additionalCost">
+                                </div>
+                                <div class="form-group">
+                                    <label>Comment:</label>
+                                    <textarea class="form-control" rows="3" v-model="productModal.comment"></textarea>
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <label>Total cost:</label>
+                                    <input type="number" class="form-control" v-model="productTotalCost" disabled>
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" :disabled="productTotalCost === 0" v-on:click="productModal.onSuccess()">{{productModal.actionName}}</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Adding new item modal -->
+            </div>
+            <div class="col-sm">
+                <p>
+                    Со склада можно забирать набор товаров, изделие. На склад могут поступать товары.
+                    <br> Цена товаров может изменяться в любое время. Изменения не должны влиять на изготовленные изделия.
+                </p>
+                <p>
+                    Склад
+                    <br> --Название
+                    <br> --Группа (коллекция)
+                    <br> ----Цвет
+                    <br> ----Товар (коллекция)
+                    <br> ------Название
+                    <br> ------Цена
+                    <br> ------Количество
+                    <br> ----Количество товаров в группе
+                    <br> ----Стоимость товаров в группе
+                    <br> --Количество товаров на складе
+                    <br> --Стоимость товаров на складе
+                    <br> --Журнал
+                    <br> ----Запись о поступлении товаров (коллекция)
+                    <br> ----Запись об изготовлении изделия (коллекция)
+                </p>
+                <p>
+                    Изделие
+                    <br> --Название
+                    <br> --Товар (коллекция)
+                    <br> ----Название
+                    <br> ----Цена
+                    <br> ----Количество
+                    <br> --Количество товаров
+                    <br> --Стоимость товаров
+                    <br> --Стоимость сборки
+                    <br> --Итоговая стоимость
+                    <br>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="serviceworker.js"></script>
+</body>
+
+</html>
