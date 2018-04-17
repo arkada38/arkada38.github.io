@@ -15,7 +15,7 @@ Vue.component('calc-item', {
           <div class="col">\
               <div class="form-group">\
                   <label>Стоимость:</label>\
-                  <input type="number" class="form-control" v-model.number="cost" disabled>\
+                  <input type="text" class="form-control" v-model.number="costs" disabled>\
               </div>\
               <button type="button" class="btn btn-outline-primary btn-block" v-on:click="remove">Удалить</button>\
           </div>\
@@ -29,7 +29,10 @@ Vue.component('calc-item', {
   },
   computed: {
     cost: function () {
-      return Math.round((330 + Math.atan((this.duration - 30) / 20) * 230) / 10) * 10
+      return 330 + Math.atan((this.duration - 30) / 20) * 230
+    },
+    costs: function () {
+      return this.round(this.cost) + ' / ' + this.round(this.cost * .85)
     }
   },
   methods: {
@@ -43,6 +46,9 @@ Vue.component('calc-item', {
       this.$emit('update', {
         duration: this.duration, cost: this.cost, index: this.index
       })
+    },
+    round: function (n) {
+      return Math.round(n / 10) * 10
     }
   }
 })
@@ -58,13 +64,19 @@ var app = new Vue({
   },
   computed: {
     cost: function () {
-      return Math.round((450 + Math.atan((this.duration - 30) / 20) * 230) / 10) * 10
+      return 450 + Math.atan((this.duration - 30) / 20) * 230
     },
     totalDuration: function () {
       return this.duration + this.additionalDuration
     },
     totalCost: function () {
       return this.cost + this.additionalCost
+    },
+    costs: function () {
+      return this.round(this.cost) + ' / ' + this.round(this.cost * .85)
+    },
+    totalCosts: function () {
+      return this.round(this.totalCost) + ' / ' + this.round(this.totalCost * .85)
     }
   },
   methods: {
@@ -108,6 +120,9 @@ var app = new Vue({
       this.additionalCost -= item.cost
 
       this.additional.splice(index, 1)
+    },
+    round: function (n) {
+      return Math.round(n / 10) * 10
     }
   }
 })
