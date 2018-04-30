@@ -13,6 +13,9 @@ var app = new Vue({
       if (numbers.charAt(0) == "0")
         numbers = numbers.replace("0", "66")
 
+      if (numbers.charAt(0) == "8" && numbers.length === 11)
+        numbers = numbers.replace("8", "7")
+
       return numbers
     },
     active_message: {
